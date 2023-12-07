@@ -121,10 +121,7 @@ func (t *TopK) Add(item string, increment uint32) error {
 					// fmt.Println(t.lookupTable[*C%(TOPK_DECAY-1)])
 					// fmt.Println(float64(*C/(TOPK_DECAY-1)) * t.lookupTable[*C%(TOPK_DECAY-1)])
 
-					decay = math.Pow(
-						t.lookupTable[TOPK_DECAY-1],
-						float64(*C/(TOPK_DECAY-1))*t.lookupTable[*C%(TOPK_DECAY-1)],
-					)
+					decay = math.Pow(t.lookupTable[TOPK_DECAY-1], float64(*C/(TOPK_DECAY-1))) * t.lookupTable[*C%(TOPK_DECAY-1)]
 
 					// fmt.Println(decay)
 					// fmt.Println("------------")
@@ -145,7 +142,7 @@ func (t *TopK) Add(item string, increment uint32) error {
 
 	if maxCount >= uint32(t.minHeap.Len()) {
 		var existing int = t.itemExists(item)
-		if existing > 0 {
+		if existing >= 0 {
 			(*t.minHeap)[existing].C = maxCount
 			heap.Fix(t.minHeap, existing)
 		} else {
